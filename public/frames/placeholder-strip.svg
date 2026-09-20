@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="1800" viewBox="0 0 600 1800" role="img" aria-label="Sample frame placeholder">
+  <defs>
+    <mask id="photo-windows" maskUnits="userSpaceOnUse" x="0" y="0" width="600" height="1800">
+      <rect x="0" y="0" width="600" height="1800" fill="#ffffff" />
+      <rect x="20" y="24" width="560" height="402" rx="16" fill="#000000" />
+      <rect x="20" y="442" width="560" height="402" rx="16" fill="#000000" />
+      <rect x="20" y="860" width="560" height="402" rx="16" fill="#000000" />
+      <rect x="20" y="1278" width="560" height="402" rx="16" fill="#000000" />
+    </mask>
+  </defs>
+
+  <g mask="url(#photo-windows)">
+    <rect x="0" y="0" width="600" height="1800" fill="#a8d8f0" />
+    <rect x="8" y="8" width="584" height="1784" rx="18" fill="none" stroke="#2a2140" stroke-width="6" />
+    <rect x="0" y="1688" width="600" height="8" fill="#2a2140" />
+    <rect x="0" y="1696" width="600" height="104" fill="#ffd98e" />
+  </g>
+
+  <g>
+    <circle cx="74" cy="1746" r="15" fill="#2a2140" />
+    <circle cx="60" cy="1731" r="10" fill="#2a2140" />
+    <circle cx="88" cy="1731" r="10" fill="#2a2140" />
+    <text x="330" y="1735" text-anchor="middle" font-family="system-ui, sans-serif" font-size="30" font-weight="600" fill="#2a2140">Sample frame</text>
+    <text x="330" y="1772" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" fill="#2a2140">Replace it in public/frames</text>
+  </g>
+</svg>

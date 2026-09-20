@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "frames": [
+    {
+      "key": "sample-strip",
+      "name": "Sample frame",
+      "src": "/frames/placeholder-strip.svg",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 20, "y": 24, "w": 560, "h": 402 },
+        { "x": 20, "y": 442, "w": 560, "h": 402 },
+        { "x": 20, "y": 860, "w": 560, "h": 402 },
+        { "x": 20, "y": 1278, "w": 560, "h": 402 }
+      ]
+    }
+  ]
+}
