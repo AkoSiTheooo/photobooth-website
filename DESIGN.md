@@ -82,7 +82,7 @@ Three-circle "ears": one large circle with two smaller tangent circles on top. U
 
 ## Page compositions (RHYTHM 3)
 
-- Greeting: poster composition, motif repeating behind one focal button.
+- Greeting: poster composition, motif repeating behind one focal button, closing on a quiet how-it-works list and the event disclaimer.
 - Template: strip preview large on one side, expectation copy on the other; stacks on phone.
 - Booth: the stage leads, shot rail beside it on desktop and below it on phone.
 - Customize: sticky live strip preview beside grouped controls.
@@ -96,7 +96,6 @@ Three-circle "ears": one large circle with two smaller tangent circles on top. U
 
 ## Placeholders in this build (all visibly labeled, replaced before launch)
 
-- Event line on the greeting page: visible placeholder text with a code TODO.
 - Logo: the word "PhotoToy" as text, marked in code as a placeholder wordmark.
 - Frames: one sample frame, tagged "Sample frame" in the picker until real overlays and manifest entries arrive.
 - Sounds: silent until sound files are added; the mute control renders only when files exist.

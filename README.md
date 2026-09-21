@@ -81,7 +81,7 @@ the four photos, and each photo is cover cropped to the middle of its window.
 - Photos live in the browser until the visitor taps "Use these photos", so a retake
   never lands in the archive.
 - A reload drops the photos on purpose, and the editor asks the visitor to start again.
-- Everything visible that is not real yet is labelled as a placeholder: the event
-  name line on the greeting page, the text wordmark, and the sample frame.
+- Everything visible that is not real yet is labelled as a placeholder: the text
+  wordmark and the sample frame.
 - Visitors never need an account, and the publishable key cannot read the archive:
   the policies allow writes to an open session only.
