@@ -1,34 +1,224 @@
 {
   "version": 1,
   "frames": [
+{
+  "key": "toy-story-1",
+  "name": "My frame",
+  "src": "/frames/toystory1.webp",
+  "width": 600,
+  "height": 1800,
+  "layout": "strip4",
+  "placeholder": false,
+  "windows": [
     {
-      "key": "sample-strip",
-      "name": "Sample frame",
-      "src": "/frames/placeholder-strip.svg",
+      "x": 16,
+      "y": 234,
+      "w": 557,
+      "h": 312
+    },
+    {
+      "x": 16,
+      "y": 550,
+      "w": 558,
+      "h": 333
+    },
+    {
+      "x": 17,
+      "y": 892,
+      "w": 557,
+      "h": 307
+    },
+    {
+      "x": 13,
+      "y": 1204,
+      "w": 557,
+      "h": 327
+    }
+  ]
+},
+{
+  "key": "toy-story-2",
+  "name": "My frame", 
+  "src": "/frames/toystory2.webp",
+  "width": 600,
+  "height": 1800,
+  "layout": "strip4",
+  "placeholder": false,
+  "windows": [
+    {
+      "x": 16,
+      "y": 234,
+      "w": 557,
+      "h": 312
+    },
+    {
+      "x": 16,
+      "y": 550,
+      "w": 558,
+      "h": 333
+    },
+    {
+      "x": 17,
+      "y": 892,
+      "w": 557,
+      "h": 307
+    },
+    {
+      "x": 13,
+      "y": 1204,
+      "w": 557,
+      "h": 327
+    }
+  ]
+},
+    {
+      "key": "zootopia-1",
+      "name": "Zootopia 1 frame",
+      "src": "/frames/zootopia1.webp",
       "width": 600,
       "height": 1800,
       "layout": "strip4",
       "placeholder": true,
       "windows": [
-        { "x": 20, "y": 24, "w": 560, "h": 402 },
-        { "x": 20, "y": 442, "w": 560, "h": 402 },
-        { "x": 20, "y": 860, "w": 560, "h": 402 },
-        { "x": 20, "y": 1278, "w": 560, "h": 402 }
+        { "x": 100, "y": 60, "w": 410, "h": 390 },
+        { "x": 100, "y": 485, "w": 410, "h": 390 },
+        { "x": 100, "y": 915, "w": 410, "h": 390 },
+        { "x": 100, "y": 1340, "w": 410, "h": 390 }
       ]
     },
     {
-      "key": "toy-story",
-      "name": "Toy Story frame",
-      "src": "/frames/toystory1.webp",
+      "key": "zootopia-2",
+      "name": "Zootopia 2 frame",
+      "src": "/frames/zootopia2.webp",
       "width": 600,
       "height": 1800,
       "layout": "strip4",
       "placeholder": true,
       "windows": [
-        { "x": 20, "y": 24, "w": 560, "h": 402 },
-        { "x": 20, "y": 442, "w": 560, "h": 402 },
-        { "x": 20, "y": 860, "w": 560, "h": 402 },
-        { "x": 20, "y": 1278, "w": 560, "h": 402 }
+        { "x": 100, "y": 60, "w": 410, "h": 390 },
+        { "x": 100, "y": 485, "w": 410, "h": 390 },
+        { "x": 100, "y": 915, "w": 410, "h": 390 },
+        { "x": 100, "y": 1340, "w": 410, "h": 390 }
+      ]
+    },
+    {
+      "key": "insideout-1",
+      "name": "Inside Out 1 frame",
+      "src": "/frames/insideout1.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 35, "y": 60, "w": 530, "h": 370 },
+        { "x": 35, "y": 420, "w": 530, "h": 370 },
+        { "x": 35, "y": 780, "w": 530, "h": 370 },
+        { "x": 35, "y": 1135, "w": 530, "h": 370 }
+      ]
+    },
+    {
+      "key": "insideout-2",
+      "name": "Inside Out 2 frame",
+      "src": "/frames/insideout2.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 35, "y": 55, "w": 530, "h": 370 },
+        { "x": 35, "y": 415, "w": 530, "h": 370 },
+        { "x": 35, "y": 775, "w": 530, "h": 370 },
+        { "x": 35, "y": 1130, "w": 530, "h": 370 }
+      ]
+    },
+    {
+      "key": "cars-1",
+      "name": "Cars 1 frame",
+      "src": "/frames/cars1.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 30, "y": 25, "w": 550, "h": 500 },
+        { "x": 30, "y": 460, "w": 550, "h": 400 },
+        { "x": 30, "y": 860, "w": 550, "h": 400 },
+        { "x": 30, "y": 1255, "w": 550, "h": 450 }
+      ]
+    },
+    {
+      "key": "cars-2",
+      "name": "Cars 2 frame",
+      "src": "/frames/cars2.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 30, "y": 160, "w": 550, "h": 400 },
+        { "x": 30, "y": 560, "w": 550, "h": 400 },
+        { "x": 30, "y": 960, "w": 550, "h": 400 },
+        { "x": 30, "y": 1350, "w": 550, "h": 400 }
+      ]
+    },
+    {
+      "key": "monstersinc-1",
+      "name": "Monsters, Inc. 1 frame",
+      "src": "/frames/monstersinc1.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 30, "y": 55, "w": 550, "h": 400 },
+        { "x": 30, "y": 435, "w": 550, "h": 400 },
+        { "x": 30, "y": 820, "w": 550, "h": 400 },
+        { "x": 30, "y": 1200, "w": 550, "h": 400 }
+      ]
+    },
+    {
+      "key": "monstersinc-2",
+      "name": "Monsters, Inc. 2 frame",
+      "src": "/frames/monstersinc2.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 30, "y": 55, "w": 550, "h": 400 },
+        { "x": 30, "y": 435, "w": 550, "h": 400 },
+        { "x": 30, "y": 820, "w": 550, "h": 400 },
+        { "x": 30, "y": 1200, "w": 550, "h": 400 }
+      ]
+    },
+    {
+      "key": "disneyprincess-1",
+      "name": "Disney Princess 1 frame",
+      "src": "/frames/disneyprincess1.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 30, "y": 90, "w": 550, "h": 350 },
+        { "x": 30, "y": 510, "w": 550, "h": 350 },
+        { "x": 30, "y": 940, "w": 550, "h": 350 },
+        { "x": 30, "y": 1385, "w": 550, "h": 350 }
+      ]
+    },
+    {
+      "key": "disneyprincess-2",
+      "name": "Disney Princess 2 frame",
+      "src": "/frames/disneyprincess2.webp",
+      "width": 600,
+      "height": 1800,
+      "layout": "strip4",
+      "placeholder": true,
+      "windows": [
+        { "x": 30, "y": 90, "w": 550, "h": 350 },
+        { "x": 30, "y": 510, "w": 550, "h": 350 },
+        { "x": 30, "y": 940, "w": 550, "h": 350 },
+        { "x": 30, "y": 1385, "w": 550, "h": 350 }
       ]
     }
   ]

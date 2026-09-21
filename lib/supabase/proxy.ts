@@ -46,10 +46,11 @@ export async function updateSession(request: NextRequest) {
   const signedIn = Boolean(data?.claims);
 
   const path = request.nextUrl.pathname;
-  const isAdminArea = path.startsWith("/admin");
+  // /dev holds the admin-only frame tool, so it is gated like the photo desk.
+  const isGatedArea = path.startsWith("/admin") || path.startsWith("/dev");
   const isLoginPage = path === "/admin/login";
 
-  if (isAdminArea && !isLoginPage && !signedIn) {
+  if (isGatedArea && !isLoginPage && !signedIn) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
     url.search = "";

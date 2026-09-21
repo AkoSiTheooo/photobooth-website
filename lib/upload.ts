@@ -36,16 +36,7 @@ async function startSession(mirror: boolean) {
     body: JSON.stringify({ mirror }),
   });
 
-  if (!response.ok) {
-    const detail = (await response.json().catch(() => null)) as {
-      error?: string;
-    } | null;
-    throw new Error(
-      detail?.error === "rate_limited"
-        ? "The booth is very busy. Try saving again in a minute."
-        : "The organizer copy could not start.",
-    );
-  }
+  if (!response.ok) throw new Error("The organizer copy could not start.");
 
   const { sessionId } = (await response.json()) as { sessionId: string };
   return sessionId;

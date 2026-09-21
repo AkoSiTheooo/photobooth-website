@@ -28,6 +28,12 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
             >
               Open the booth
             </Link>
+            <Link
+              href="/dev/measure-frame"
+              className="inline-flex min-h-11 items-center rounded-full px-3 text-base text-ink-soft underline-offset-4 hover:underline"
+            >
+              Measure a frame
+            </Link>
             <form action={signOut}>
               <Button type="submit" variant="outline" className="h-11 rounded-full px-5">
                 Sign out

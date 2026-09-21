@@ -177,42 +177,6 @@ export default function BoothPage() {
     }
   }
 
-  const isDev = process.env.NODE_ENV === "development";
-
-  async function fillWithTestPhotos() {
-    const colours = ["#a8d8f0", "#f7c8d4", "#ffd98e", "#9a8cc2"];
-    const made: Blob[] = [];
-
-    for (let index = 0; index < SHOT_COUNT; index += 1) {
-      const canvas = document.createElement("canvas");
-      canvas.width = 1200;
-      canvas.height = 900;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      ctx.fillStyle = colours[index % colours.length];
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#2a2140";
-      ctx.font = "600 260px sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(String(index + 1), canvas.width / 2, canvas.height / 2);
-
-      made.push(
-        await new Promise<Blob>((resolve, reject) => {
-          canvas.toBlob(
-            (blob) => (blob ? resolve(blob) : reject(new Error("No test photo."))),
-            "image/jpeg",
-            0.9,
-          );
-        }),
-      );
-    }
-
-    setShots(made);
-    setPhase({ kind: "review" });
-  }
-
   const shotLabel =
     phase.kind === "countdown" || phase.kind === "flash"
       ? `Photo ${phase.shot} of ${SHOT_COUNT}`
@@ -388,23 +352,6 @@ export default function BoothPage() {
                   .
                 </AlertDescription>
               </Alert>
-            ) : null}
-
-            {isDev ? (
-              <div className="mt-6 rounded-field border border-dashed border-stage-line p-4">
-                <p className="text-sm text-stage-muted">
-                  Dev only: four numbered test photos, so the strip pipeline can be
-                  checked without a camera.
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => void fillWithTestPhotos()}
-                  className="mt-3 h-11 rounded-full border-stage-line bg-transparent px-5 text-stage-text hover:bg-stage hover:text-stage-text"
-                >
-                  Fill with test photos
-                </Button>
-              </div>
             ) : null}
           </div>
 

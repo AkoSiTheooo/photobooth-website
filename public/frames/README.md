@@ -7,9 +7,9 @@ covers the photos.
 ## Add a real frame
 
 1. Drop the file here, for example `castle-strip.webp`.
-2. Find its window rectangles, in pixels, measured from the top-left corner. Run the
-   dev server and open `/dev/measure-frame`: it loads the file, scans the transparency,
-   and prints a ready-to-paste manifest entry.
+2. Find its window rectangles, in pixels, measured from the top-left corner. Open
+   `/dev/measure-frame` and sign in as the admin: it loads the file, scans the
+   transparency, and prints a ready-to-paste manifest entry.
 3. Paste the entry into the `frames` array in `manifest.json` and set `placeholder`
    to `false`.
 4. Reload. The frame appears in the picker; no code change and no rebuild.

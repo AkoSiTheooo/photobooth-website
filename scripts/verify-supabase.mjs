@@ -1,7 +1,7 @@
 // Checks what a visitor with the public key can and cannot do. Run:
 //   node scripts/verify-supabase.mjs
-// It leaves a few throwaway session rows behind for the rate-limit check; the
-// output prints the ip_hash prefix to clean them up with.
+// It leaves a few throwaway session rows behind; the output prints the ids to
+// clean them up with.
 
 import { readFileSync } from "node:fs";
 
@@ -90,24 +90,28 @@ record(
   `HTTP ${unsignedObject.status}`,
 );
 
-const ipHash = `verify-${Date.now()}`;
-let issued = 0;
-let limitedAt = 0;
+// The cap that used to sit here (12 per hour per IP, 240 globally) is gone;
+// 13 starts in a row, one past the old boundary, all have to succeed.
+const createdSessionIds = [];
 for (let attempt = 1; attempt <= 13; attempt += 1) {
   const response = await fetch(`${url}/rest/v1/rpc/start_booth_session`, {
     method: "POST",
     headers: { ...auth, "Content-Type": "application/json" },
-    body: JSON.stringify({ p_mirror: true, p_ip_hash: ipHash }),
+    body: JSON.stringify({ p_mirror: true }),
   });
   const body = await json(response);
-  const text = JSON.stringify(body ?? "");
-  if (response.ok && typeof body === "string") issued += 1;
-  else if (text.includes("rate_limited")) limitedAt ||= attempt;
+  if (
+    response.ok &&
+    typeof body === "string" &&
+    !createdSessionIds.includes(body)
+  ) {
+    createdSessionIds.push(body);
+  }
 }
 record(
-  "the booth issuer rate limits at 12 per hour",
-  issued === 12 && limitedAt === 13,
-  `${issued} issued, first refusal at attempt ${limitedAt || "never"}`,
+  "the booth issuer opens sessions without a cap",
+  createdSessionIds.length === 13,
+  `${createdSessionIds.length} issued`,
 );
 
 // The positive path matters as much as the refusals: a session the server just
@@ -115,9 +119,10 @@ record(
 const start = await fetch(`${url}/rest/v1/rpc/start_booth_session`, {
   method: "POST",
   headers: { ...auth, "Content-Type": "application/json" },
-  body: JSON.stringify({ p_mirror: true, p_ip_hash: `verify-open-${Date.now()}` }),
+  body: JSON.stringify({ p_mirror: true }),
 });
 const sessionId = await json(start);
+if (typeof sessionId === "string") createdSessionIds.push(sessionId);
 const storagePath = `sessions/${sessionId}/shot-1.jpg`;
 
 const allowedCapture = await fetch(`${url}/rest/v1/photo_captures`, {
@@ -158,6 +163,8 @@ for (const result of results) {
   console.log(`${result.ok ? "PASS" : "FAIL"}  ${result.name} (${result.detail})`);
 }
 console.log("");
-console.log(`Clean up with: delete from public.photo_sessions where ip_hash like 'verify-%';`);
+console.log(
+  `Clean up with: delete from public.photo_sessions where id in ('${createdSessionIds.join("', '")}');`,
+);
 const failed = results.filter((result) => !result.ok).length;
 process.exit(failed === 0 ? 0 : 1);
