@@ -3,7 +3,7 @@
   "frames": [
 {
   "key": "toy-story-1",
-  "name": "My frame",
+  "name": "Toy Story 1 frame",
   "src": "/frames/toystory1.webp",
   "width": 600,
   "height": 1800,
@@ -38,7 +38,7 @@
 },
 {
   "key": "toy-story-2",
-  "name": "My frame", 
+  "name": "Toy Story 2 frame",
   "src": "/frames/toystory2.webp",
   "width": 600,
   "height": 1800,
