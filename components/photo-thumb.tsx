@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { cn } from "cn";
+import { SHOT_ASPECT } from "@/lib/framing";
 
 type PhotoThumbProps = {
   blob: Blob;
@@ -10,7 +11,7 @@ type PhotoThumbProps = {
 };
 
 const THUMB_WIDTH = 320;
-const THUMB_HEIGHT = 240;
+const THUMB_HEIGHT = Math.round(THUMB_WIDTH / SHOT_ASPECT);
 
 // Draws the photo straight from its blob. Object URLs would need revoking, and a
 // revoked URL under StrictMode's double mount leaves a broken image behind.
@@ -63,7 +64,8 @@ export function PhotoThumb({ blob, label, className }: PhotoThumbProps) {
       height={THUMB_HEIGHT}
       role="img"
       aria-label={label}
-      className={cn("aspect-[4/3] w-full object-cover", className)}
+      className={cn("w-full object-cover", className)}
+      style={{ aspectRatio: SHOT_ASPECT }}
     />
   );
 }

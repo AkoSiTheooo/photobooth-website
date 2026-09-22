@@ -9,7 +9,8 @@ covers the photos.
 1. Drop the file here, for example `castle-strip.webp`.
 2. Find its window rectangles, in pixels, measured from the top-left corner. Open
    `/dev/measure-frame` and sign in as the admin: it loads the file, scans the
-   transparency, and prints a ready-to-paste manifest entry.
+   transparency, grows each opening to the 16:9 camera view, and prints a
+   ready-to-paste manifest entry.
 3. Paste the entry into the `frames` array in `manifest.json` and set `placeholder`
    to `false`.
 4. Reload. The frame appears in the picker; no code change and no rebuild.
@@ -26,5 +27,6 @@ covers the photos.
 | `placeholder`     | `true` shows a "Sample frame" tag in the picker             |
 | `windows`         | Four rectangles, top to bottom: `x`, `y`, `w`, `h`          |
 
-Photos are cover-cropped into the middle of each window, so a window close to 4:3
-loses the least from a typical camera feed.
+Photos are cover-cropped into the middle of each window. The booth shows the
+camera at 16:9, so a window close to 16:9 keeps what the visitor saw; openings
+further from 16:9 crop the photo harder, and the measure tool flags those.

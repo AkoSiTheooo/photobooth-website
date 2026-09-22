@@ -1,3 +1,5 @@
+import { aspectDeviation, ASPECT_WARN_THRESHOLD } from "@/lib/framing";
+
 export type FrameWindow = { x: number; y: number; w: number; h: number };
 
 export type FrameDefinition = {
@@ -72,6 +74,18 @@ function assertFrame(frame: FrameDefinition) {
     if (!insideFrame) {
       throw new Error(
         `Frame ${label} window ${index + 1} sits outside the ${frame.width}x${frame.height} canvas.`,
+      );
+    }
+
+    const deviation = aspectDeviation(window);
+    if (
+      process.env.NODE_ENV !== "production" &&
+      Math.abs(deviation) > ASPECT_WARN_THRESHOLD
+    ) {
+      console.warn(
+        `Frame ${label}: window ${index + 1} is ${Math.abs(Math.round(deviation * 100))}% ${
+          deviation > 0 ? "wider" : "taller"
+        } than the camera view, so it crops the photo. Open /dev/measure-frame to conform it.`,
       );
     }
   }

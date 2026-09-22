@@ -3,10 +3,21 @@
 import { useRef, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  ASPECT_WARN_THRESHOLD,
+  conformWindowRect,
+  SHOT_ASPECT,
+  SHOT_ASPECT_LABEL,
+  windowAspect,
+} from "@/lib/framing";
 
 type WindowRect = { x: number; y: number; w: number; h: number };
 
 type Detected = WindowRect & { fill: number };
+
+// A measured opening plus the window the manifest will use: the same rect grown
+// to the camera aspect, or kept as measured with a problem to fix by hand.
+type ConformResult = { rect: WindowRect; problem: string | null };
 
 // Alpha at or below this counts as an opening. Anti-aliased edges land above it.
 const ALPHA_CUTOFF = 8;
@@ -17,12 +28,14 @@ export function MeasureFrameTool() {
   const previewRef = useRef<HTMLCanvasElement>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [windows, setWindows] = useState<Detected[]>([]);
+  const [conformed, setConformed] = useState<ConformResult[]>([]);
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   async function loadFile(file: File) {
     setError(null);
     setWindows([]);
+    setConformed([]);
     setFileName(file.name);
 
     try {
@@ -41,9 +54,11 @@ export function MeasureFrameTool() {
 
       const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
       const found = detectWindows(pixels);
+      const result = conformWindows(found, canvas.width, canvas.height);
       setImage(next);
       setWindows(found);
-      drawPreview(next, found);
+      setConformed(result);
+      drawPreview(next, result, found);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "That file could not be read.");
     }
@@ -57,7 +72,7 @@ export function MeasureFrameTool() {
     height: image?.naturalHeight ?? 1800,
     layout: "strip4",
     placeholder: false,
-    windows: windows.map(({ x, y, w, h }) => ({ x, y, w, h })),
+    windows: conformed.map(({ rect }) => rect),
   };
 
   return (
@@ -90,6 +105,18 @@ export function MeasureFrameTool() {
           Detected {windows.length} opening{windows.length === 1 ? "" : "s"}.
         </p>
 
+        {windows.length > 0 ? (
+          <ul className="mt-3 flex flex-col gap-1 text-sm text-ink-soft">
+            {windows.map((window, index) => (
+              <li key={index}>
+                Window {index + 1}: {window.w} x {window.h} (
+                {windowAspect(window).toFixed(2)}:1)
+                {describeConform(window, conformed[index])}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
         <canvas
           ref={previewRef}
           className="mt-4 w-full rounded-thumb border border-line bg-white"
@@ -110,6 +137,23 @@ export function MeasureFrameTool() {
               This frame has {windows.length}. If the dividers between photos are
               transparent, the tool sees one opening; measure those by hand and paste
               them into the manifest.
+            </AlertDescription>
+          </Alert>
+        ) : null}
+
+        {conformed.some((entry) => entry.problem) ? (
+          <Alert className="mt-4 rounded-field">
+            <AlertTitle>
+              Some openings cannot fit the {SHOT_ASPECT_LABEL} camera view
+            </AlertTitle>
+            <AlertDescription>
+              <ul className="flex list-disc flex-col gap-1 pl-4">
+                {conformed.map((entry, index) =>
+                  entry.problem ? <li key={index}>{entry.problem}</li> : null,
+                )}
+              </ul>
+              These windows were kept as measured, so the strip crops those photos
+              harder than the camera showed.
             </AlertDescription>
           </Alert>
         ) : null}
@@ -151,9 +195,13 @@ export function MeasureFrameTool() {
     </div>
   );
 
-  function drawPreview(frame: HTMLImageElement, rects: Detected[]) {
+  function drawPreview(
+    frame: HTMLImageElement,
+    conformed: ConformResult[],
+    measured: Detected[],
+  ) {
     const target = previewRef.current;
-    if (!target || rects.length === 0) return;
+    if (!target || conformed.length === 0) return;
 
     target.width = frame.naturalWidth;
     target.height = frame.naturalHeight;
@@ -162,7 +210,7 @@ export function MeasureFrameTool() {
 
     context.clearRect(0, 0, target.width, target.height);
 
-    rects.forEach((rect, index) => {
+    conformed.forEach(({ rect }, index) => {
       const colours = ["#a8d8f0", "#f7c8d4", "#ffd98e", "#9a8cc2"];
       context.fillStyle = colours[index % colours.length];
       context.fillRect(rect.x, rect.y, rect.w, rect.h);
@@ -172,6 +220,23 @@ export function MeasureFrameTool() {
       context.textBaseline = "middle";
       context.fillText(String(index + 1), rect.x + rect.w / 2, rect.y + rect.h / 2);
     });
+
+    // The measured opening inside the grown window, so it stays visible while
+    // checking the frame.
+    context.setLineDash([8, 6]);
+    context.strokeStyle = "#2a2140";
+    context.lineWidth = 2;
+    measured.forEach((rect, index) => {
+      const grown = conformed[index]?.rect;
+      const same =
+        grown &&
+        grown.x === rect.x &&
+        grown.y === rect.y &&
+        grown.w === rect.w &&
+        grown.h === rect.h;
+      if (!same) context.strokeRect(rect.x, rect.y, rect.w, rect.h);
+    });
+    context.setLineDash([]);
 
     context.drawImage(frame, 0, 0);
   }
@@ -184,6 +249,72 @@ function loadImage(src: string) {
     image.onerror = () => reject(new Error("That image could not be decoded."));
     image.src = src;
   });
+}
+
+// Grows each opening to the camera aspect. The growth hides under the opaque
+// frame art, so a window is kept as measured only when the grown rect cannot
+// stay inside the canvas or would reach into another opening.
+function conformWindows(detected: Detected[], width: number, height: number): ConformResult[] {
+  return detected.map((measured, index) => {
+    const grown = clampToCanvas(pixelBounds(conformWindowRect(measured)), width, height);
+    const intrudes = detected.some(
+      (other, otherIndex) => otherIndex !== index && overlaps(grown, other),
+    );
+    const covers =
+      grown.x <= measured.x &&
+      grown.y <= measured.y &&
+      grown.x + grown.w >= measured.x + measured.w &&
+      grown.y + grown.h >= measured.y + measured.h;
+    const onAspect =
+      Math.abs(windowAspect(grown) / SHOT_ASPECT - 1) <= ASPECT_WARN_THRESHOLD;
+
+    if (covers && onAspect && !intrudes) return { rect: grown, problem: null };
+
+    return {
+      rect: pixelBounds(measured),
+      problem: intrudes
+        ? `Window ${index + 1} cannot grow to ${SHOT_ASPECT_LABEL} without reaching into the next opening; leave more art between them.`
+        : `Window ${index + 1} cannot grow to ${SHOT_ASPECT_LABEL} inside the canvas; leave more room around the opening.`,
+    };
+  });
+}
+
+// Shifts a window inside the canvas, then caps its size, because the manifest
+// rejects windows that poke out.
+function clampToCanvas(rect: WindowRect, width: number, height: number): WindowRect {
+  const w = Math.min(rect.w, width);
+  const h = Math.min(rect.h, height);
+  return {
+    x: Math.min(Math.max(rect.x, 0), width - w),
+    y: Math.min(Math.max(rect.y, 0), height - h),
+    w,
+    h,
+  };
+}
+
+// Pixel-aligned outward, so the photo still covers every measured pixel.
+function pixelBounds(rect: WindowRect): WindowRect {
+  const x = Math.floor(rect.x);
+  const y = Math.floor(rect.y);
+  return { x, y, w: Math.ceil(rect.x + rect.w) - x, h: Math.ceil(rect.y + rect.h) - y };
+}
+
+function overlaps(a: WindowRect, b: WindowRect) {
+  return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+}
+
+function describeConform(measured: WindowRect, result: ConformResult | undefined) {
+  if (!result) return "";
+  if (result.problem) return ", kept as measured";
+
+  const { rect } = result;
+  const same =
+    rect.x === measured.x &&
+    rect.y === measured.y &&
+    rect.w === measured.w &&
+    rect.h === measured.h;
+  if (same) return `, already ${SHOT_ASPECT_LABEL}`;
+  return `, grown to ${rect.w} x ${rect.h} for ${SHOT_ASPECT_LABEL}`;
 }
 
 // Flood fills the transparent pixels, keeps the regions large enough to be photo

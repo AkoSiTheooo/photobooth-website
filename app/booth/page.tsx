@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CameraFailure, capturePhoto, startCamera, stopCamera, wait } from "@/lib/capture";
+import { SHOT_ASPECT } from "@/lib/framing";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { loadBoothSounds, type BoothSounds } from "@/lib/sounds";
 import { saveOriginals } from "@/lib/upload";
@@ -203,8 +204,11 @@ export default function BoothPage() {
               muted
               autoPlay
               aria-label="Camera view"
-              className="aspect-[4/3] w-full object-cover"
-              style={mirror ? { transform: "scaleX(-1)" } : undefined}
+              className="w-full object-cover"
+              style={{
+                aspectRatio: SHOT_ASPECT,
+                ...(mirror ? { transform: "scaleX(-1)" } : {}),
+              }}
             />
 
             {phase.kind === "flash" && !reducedMotion ? (
@@ -231,6 +235,10 @@ export default function BoothPage() {
               </span>
             ) : null}
           </div>
+
+          <p className="mt-3 text-base text-stage-muted">
+            Your strip keeps this view.
+          </p>
 
           {cameraError ? (
             <Alert className="mt-4 rounded-field border-stage-line bg-stage-raised text-stage-text">

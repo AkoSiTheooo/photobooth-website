@@ -2,6 +2,7 @@
 
 import { PhotoThumb } from "@/components/photo-thumb";
 import { cn } from "cn";
+import { SHOT_ASPECT } from "@/lib/framing";
 
 type ShotRailProps = {
   shots: Blob[];
@@ -20,9 +21,10 @@ export function ShotRail({ shots, count, className }: ShotRailProps) {
           <li
             key={index}
             className={cn(
-              "relative aspect-[4/3] overflow-hidden rounded-thumb border",
+              "relative overflow-hidden rounded-thumb border",
               shot ? "border-transparent" : "border-dashed border-stage-line",
             )}
+            style={{ aspectRatio: SHOT_ASPECT }}
           >
             {shot ? <PhotoThumb blob={shot} label={`Photo ${index + 1}`} /> : null}
             <span className="absolute bottom-1 left-1 rounded-chip bg-stage px-1.5 py-0.5 font-display text-xs font-semibold text-stage-text">
