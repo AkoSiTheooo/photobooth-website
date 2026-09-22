@@ -40,7 +40,7 @@ export function FrameGrid({ frames, value, onChange }: FrameGridProps) {
                 {frame.name}
               </span>
               {frame.placeholder ? (
-                <span className="mt-0.5 block text-xs text-ink-soft"></span>
+                <span className="mt-0.5 block text-xs text-ink-soft">Sample frame</span>
               ) : null}
               {active ? <span className="sr-only">Selected</span> : null}
             </button>
