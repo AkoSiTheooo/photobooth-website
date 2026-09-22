@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { SHOT_ASPECT } from "@/lib/framing";
 import { createClient } from "@/lib/supabase/server";
 
 type SessionRow = {
@@ -178,7 +179,8 @@ export default async function AdminSessionsPage({
                         <img
                           src={url}
                           alt={`First photo of the visit at ${session.created_at}`}
-                          className="h-12 w-16 rounded-[8px] border border-line/60 object-cover"
+                          className="h-12 rounded-[8px] border border-line/60 object-cover"
+                          style={{ aspectRatio: SHOT_ASPECT }}
                         />
                       ) : (
                         <span className="text-base text-ink-soft">No preview</span>
