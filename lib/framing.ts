@@ -1,10 +1,10 @@
 // The shape of the booth's camera view. The live preview, the photo thumbnails
 // and every frame window are centered on it, so what a visitor sees is what the
 // strip keeps.
-export const SHOT_ASPECT = 16 / 9;
+export const SHOT_ASPECT = 1;
 
 // How the shape is written in copy meant for people.
-export const SHOT_ASPECT_LABEL = "16:9";
+export const SHOT_ASPECT_LABEL = "1:1";
 
 // How far a window may sit from SHOT_ASPECT before the manifest warns. A share
 // of the target, so 0.08 is 8%.

@@ -80,8 +80,9 @@ export function stopCamera(stream: MediaStream | null, video: HTMLVideoElement |
 
 const MAX_EDGE = 2048;
 
-// Snapshot of what the child sees, capped at 2048 px so a 2 x 6 strip stays
-// sharp without holding full sensor frames in memory.
+// Snapshot of what the child sees: the middle square of the camera frame,
+// capped at 2048 px so a 2 x 6 strip stays sharp without holding full sensor
+// frames in memory.
 export function capturePhoto(video: HTMLVideoElement, mirror: boolean): Promise<Blob> {
   const sourceWidth = video.videoWidth;
   const sourceHeight = video.videoHeight;
@@ -89,22 +90,27 @@ export function capturePhoto(video: HTMLVideoElement, mirror: boolean): Promise<
     throw new Error("The camera is still warming up. Try again in a moment.");
   }
 
-  const scale = Math.min(1, MAX_EDGE / Math.max(sourceWidth, sourceHeight));
-  const width = Math.round(sourceWidth * scale);
-  const height = Math.round(sourceHeight * scale);
+  // The preview shows the middle square of the stream, so the stored photo
+  // keeps the same pixels on any camera shape, phone or webcam.
+  const side = Math.min(sourceWidth, sourceHeight);
+  const sourceX = (sourceWidth - side) / 2;
+  const sourceY = (sourceHeight - side) / 2;
+
+  const scale = Math.min(1, MAX_EDGE / side);
+  const size = Math.round(side * scale);
 
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = size;
+  canvas.height = size;
 
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("This browser cannot take the photo.");
 
   if (mirror) {
-    ctx.translate(width, 0);
+    ctx.translate(size, 0);
     ctx.scale(-1, 1);
   }
-  ctx.drawImage(video, 0, 0, width, height);
+  ctx.drawImage(video, sourceX, sourceY, side, side, 0, 0, size, size);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob(
