@@ -9,8 +9,9 @@ type ComposeInput = {
   shots: (HTMLImageElement | null)[];
 };
 
-// The one place a strip is drawn: photos cover-fit into the frame windows, then
-// the frame image sits on top. The live preview and the download share this.
+// The one place a strip is drawn: each photo is cropped to its window's shape
+// and drawn inside it, then the frame image sits on top. The live preview and
+// the download share this.
 export function composeStrip(
   canvas: HTMLCanvasElement,
   { frame, frameImage, shots }: ComposeInput,
@@ -43,17 +44,37 @@ function drawCover(
   const height = image.naturalHeight;
   if (width === 0 || height === 0) return;
 
-  const scale = Math.max(window.w / width, window.h / height);
-  const drawWidth = width * scale;
-  const drawHeight = height * scale;
+  const crop = coverSourceRect(width, height, window);
 
   ctx.drawImage(
     image,
-    window.x + (window.w - drawWidth) / 2,
-    window.y + (window.h - drawHeight) / 2,
-    drawWidth,
-    drawHeight,
+    crop.x,
+    crop.y,
+    crop.w,
+    crop.h,
+    window.x,
+    window.y,
+    window.w,
+    window.h,
   );
+}
+
+// The centered part of the photo that matches the window's shape. Cropping the
+// source first keeps the drawn pixels inside the window: the strip canvas is
+// shared by every window, so an oversized draw would spill onto its neighbours.
+export function coverSourceRect(
+  width: number,
+  height: number,
+  window: FrameWindow,
+): { x: number; y: number; w: number; h: number } {
+  const aspect = window.w / window.h;
+
+  let w = width;
+  let h = height;
+  if (width / height > aspect) w = height * aspect;
+  else h = width / aspect;
+
+  return { x: (width - w) / 2, y: (height - h) / 2, w, h };
 }
 
 export function loadShotImage(blob: Blob): Promise<HTMLImageElement> {

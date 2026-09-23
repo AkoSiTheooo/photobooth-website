@@ -16,6 +16,10 @@ export default function MeasureFramePage() {
         This page finds the photo windows inside a frame file and writes the manifest
         entry for it. Only the admin can open this page.
       </p>
+      <p className="mt-2 max-w-[60ch] text-base text-ink-soft">
+        To re-measure every frame in the manifest at once, run{" "}
+        <code className="font-mono text-sm">npm run align-frames</code> instead.
+      </p>
       <div className="mt-8">
         <MeasureFrameTool />
       </div>
